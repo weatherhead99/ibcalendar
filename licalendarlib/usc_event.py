@@ -14,6 +14,10 @@ from nltk import tokenize
 from .preprocess import strip_html_tags
 from PIL import Image
 import io
+from collections import namedtuple
+
+event_settings = namedtuple("event_settings", ("nsentences", "enabled",
+                                               "thumbnail_size"))
 
 def split_sentences(text: str):
     return tokenize.sent_tokenize(text)

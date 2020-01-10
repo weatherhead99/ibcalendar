@@ -8,13 +8,13 @@ Created on Fri Jan 10 03:04:37 2020
 
 import tqdm
 import ipywidgets
-from IPython.core.display import display
+from IPython.display import display, FileLink
 from .html_template import html_format_event
-from collections import namedtuple
 from datetime import datetime, timedelta
 from .localist_calendar import LocalistCalendarAPI
+from .usc_event import event_settings
 from io import BytesIO
-
+from .generate_textfiles import generate_event_text
 
 def get_png_str(image) -> bytes:
     byte_io = BytesIO()
@@ -79,14 +79,13 @@ class EventDownloader:
             self._browser.update_images(self._images)
 
 
-event_settings = namedtuple("event_settings", ("nsentences", "enabled",
-                                               "thumbnail_size"))
+
 
 class EventBrowser:
     DEFAULT_SENTENCES = 2
 
     def display(self):
-        display(self.event_selector, self.settingsbox,
+        display(self.event_selector, self.settingsbox, self.DownloadButton,
                 self.imagepreview, self.htmlpreview, self.rawpreview)
 
     def __init__(self, events=None, images = None):
@@ -112,8 +111,10 @@ class EventBrowser:
         
         self.htmlpreview = ipywidgets.HTML()
         self.imagepreview = ipywidgets.Image()
-        
         self.rawpreview = ipywidgets.Textarea()
+
+        self.DownloadButton = ipywidgets.Button(description="download text file")
+
 
         self._html_caches = {}
 
@@ -135,6 +136,9 @@ class EventBrowser:
         self.event_selector.observe(self._event_select_handle, "value")
         self.nsentences.observe(self._event_change_nsentences, "value")
         self.enable_event.observe(self._event_change_enabled, "value")
+        
+        self.DownloadButton.on_click(self.get_text_file)
+        
         if len(self.events) > 0:
             self.display_event(0,self.DEFAULT_SENTENCES)
 
@@ -177,6 +181,12 @@ class EventBrowser:
         self._settings[evnum] = event_settings(nsentences=self.nsentences.value,
                               enabled=self.enable_event.value,
                               thumbnail_size=(210,280))
+
+    def get_text_file(self, change):
+        txt = generate_event_text(self.events, list(self._settings.values()))
+        with open("generated_events.txt", "w") as f:
+            f.write(txt)
+        display(FileLink("generated_events.txt"))
 
     def display_event(self, evnum: int, nsentences: int):
         if nsentences is None:
