@@ -5,7 +5,7 @@ Created on Fri Jan 10 01:59:06 2020
 
 @author: danw
 """
-from usc_event import Event
+from .usc_event import Event
 from string import Template
 import pytz
 

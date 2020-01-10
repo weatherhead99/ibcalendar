@@ -11,7 +11,7 @@ import dateutil
 import datetime
 import requests
 from nltk import tokenize
-from preprocess import strip_html_tags
+from .preprocess import strip_html_tags
 from PIL import Image
 import io
 
