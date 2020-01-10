@@ -50,7 +50,6 @@ class EventDownloader:
 
         self._events = []
         self._images = []
-        self._thumbnails = []
 
     def download_events(self, startdate, enddate):
         api = LocalistCalendarAPI(self.CALENDAR_API_URL)
@@ -62,6 +61,7 @@ class EventDownloader:
 
         thumbnail_size = (210,280)
 
+        self._images.clear()
         print("retrieving image files...")
         for ev in tqdm.tqdm(self._events):
             im = ev.download_image()
