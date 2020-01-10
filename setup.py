@@ -8,5 +8,6 @@ setuptools.setup(
         "nltk",
         "Pillow",
         "requests",
-        "tqdm"]
+        "tqdm",
+        "pytz"]
     )
