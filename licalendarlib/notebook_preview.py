@@ -68,8 +68,8 @@ class EventDownloader:
             self._images.append(im)
 
     def _event_download_button_clicked(self, event):
-        self._startdate = self.start_date_selector.value.date()
-        self._enddate = self.end_date_selector.value.date()
+        self._startdate = self.start_date_selector.value
+        self._enddate = self.end_date_selector.value
         self.download_events(self._startdate, self._enddate)
         self.update_browser()
 
