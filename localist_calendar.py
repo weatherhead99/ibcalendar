@@ -1,6 +1,6 @@
 import requests
 import datetime
-from event import Event
+from usc_event import Event
 
 class LocalistCalendarAPI:
     DATE_FMT = "%Y-%m-%d"
