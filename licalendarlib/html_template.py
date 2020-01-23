@@ -14,7 +14,10 @@ PACIFIC = pytz.timezone("US/Pacific")
 #taken from the source of the myemma emails
 
 #the text style for the date, time and location
-H1_STYLE = "display: block;font-size: 30px;font-weight: bold;margin: 0;line-height: 1.3;margin: 0;padding: 0;border: 0;font-size: 100%;font: inherit;vertical-align: baseline;font-family: Arial, Helvetica, sans-serif;font-size: 12px;font-weight: normal;color: #900;margin: 0;padding: 0;border: 0;font-size: 100%;font: inherit;vertical-align: baseline;font-family: Arial, Helvetica, sans-serif;font-size: 12px;font-weight: normal;color: #900;line-height: 30px"
+#NOTE: This is the old (wrong) spacing
+#H1_STYLE = "display: block;font-size: 30px;font-weight: bold;margin: 0;line-height: 1.3;margin: 0;padding: 0;border: 0;font-size: 100%;font: inherit;vertical-align: baseline;font-family: Arial, Helvetica, sans-serif;font-size: 12px;font-weight: normal;color: #900;margin: 0;padding: 0;border: 0;font-size: 100%;font: inherit;vertical-align: baseline;font-family: Arial, Helvetica, sans-serif;font-size: 12px;font-weight: normal;color: #900;line-height: 30px"
+H1_STYLE = "display: block; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant-caps: inherit; font-stretch: inherit; vertical-align: baseline; font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: normal; color: rgb(153, 0, 0); line-height: 18px;"
+
 H1_SPAN_STYLE = "color: rgb(0, 28, 171); font-size: 15px"
     
 #the text style for the event title
