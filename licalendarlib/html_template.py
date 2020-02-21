@@ -39,7 +39,7 @@ single_event_text_template = """ <h1 style="$H1_STYLE"> <strong>
 
 def html_format_event(ev: Event, nsentences: int=2, local_timezone=PACIFIC):
     local_dt = ev.instances[0].datetime.astimezone(local_timezone)
-    dstr = local_dt.strftime("%A, %B -%d")
+    dstr = local_dt.strftime("%A, %B %-d")
     tstr = local_dt.strftime("%-I:%M %p")
     dtl_string = "%s | %s | %s" % (dstr, tstr, ev.location_and_room)
     desc_string = ev.get_short_description(nsentences)
