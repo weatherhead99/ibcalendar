@@ -19,6 +19,6 @@ setuptools.setup(
         "requests",
         "tqdm",
         "pytz",
-        "slugify"],
+        "python-slugify"],
     setup_requires = ["nltk"]
     )
