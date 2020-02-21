@@ -18,6 +18,7 @@ setuptools.setup(
         "Pillow",
         "requests",
         "tqdm",
-        "pytz"],
+        "pytz",
+        "slugify"],
     setup_requires = ["nltk"]
     )

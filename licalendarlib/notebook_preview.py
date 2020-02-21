@@ -14,7 +14,7 @@ from datetime import datetime, timedelta
 from .localist_calendar import LocalistCalendarAPI
 from .usc_event import event_settings
 from io import BytesIO
-from .generate_textfiles import generate_event_text
+from .generate_textfiles import generate_event_text, generate_event_images
 
 def get_png_str(image) -> bytes:
     byte_io = BytesIO()
@@ -41,12 +41,14 @@ class EventDownloader:
         
         self.download_button = ipywidgets.Button(description="download events")
         
+        
         self.button_box = ipywidgets.HBox([self.start_date_selector, 
                                            self.end_date_selector, 
                                            self.download_button])
 
 
         self.download_button.on_click(self._event_download_button_clicked)
+        
 
         self._events = []
         self._images = []
@@ -59,7 +61,6 @@ class EventDownloader:
         self._events = events
         print("got %d events" % len(self._events))
 
-        thumbnail_size = (210,280)
 
         self._images.clear()
         print("retrieving image files...")
@@ -86,6 +87,7 @@ class EventBrowser:
 
     def display(self):
         display(self.event_selector, self.settingsbox, self.DownloadButton,
+                self.download_images_button,
                 self.imagepreview, self.htmlpreview, self.rawpreview)
 
     def __init__(self, events=None, images = None):
@@ -114,7 +116,7 @@ class EventBrowser:
         self.rawpreview = ipywidgets.Textarea()
 
         self.DownloadButton = ipywidgets.Button(description="download text file")
-
+        self.download_images_button = ipywidgets.Button(description="download images")
 
         self._html_caches = {}
 
@@ -138,6 +140,7 @@ class EventBrowser:
         self.enable_event.observe(self._event_change_enabled, "value")
         
         self.DownloadButton.on_click(self.get_text_file)
+        self.download_images_button.on_click(self.get_image_file)
         
         if len(self.events) > 0:
             self.display_event(0,self.DEFAULT_SENTENCES)
@@ -187,6 +190,14 @@ class EventBrowser:
         with open("generated_events.txt", "w") as f:
             f.write(txt)
         display(FileLink("generated_events.txt"))
+        
+    def get_image_file(self, change):
+        zfile = generate_event_images(self.events, self.thumbnails)
+        with open("generated_images.zip", "wb") as f:
+            f.write(zfile)
+        display(FileLink("generated_images.zip"))
+        
+        
 
     def display_event(self, evnum: int, nsentences: int):
         if nsentences is None:
