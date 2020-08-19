@@ -78,7 +78,7 @@ class Event(Item):
     
     @property
     def location_and_room(self):
-        if len(self["room_number"]) > 0:
+        if self["room_number"] is not None and len(self["room_number"]) > 0:
             return "%s, %s" % (self["location_name"], self["room_number"])
         else:
             return self["location_name"]
