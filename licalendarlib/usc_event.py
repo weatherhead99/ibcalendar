@@ -80,6 +80,8 @@ class Event(Item):
     def location_and_room(self):
         if self["room_number"] is not None and len(self["room_number"]) > 0:
             return "%s, %s" % (self["location_name"], self["room_number"])
+        elif self["room_number"] is None:
+            return "Virtual"
         else:
             return self["location_name"]
     
