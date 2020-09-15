@@ -15,6 +15,7 @@ from .localist_calendar import LocalistCalendarAPI
 from .usc_event import event_settings
 from io import BytesIO
 from .generate_textfiles import generate_event_text, generate_event_images
+import warnings
 
 def get_png_str(image) -> bytes:
     byte_io = BytesIO()
@@ -24,6 +25,16 @@ def get_png_str(image) -> bytes:
 class EventDownloader:
     CALENDAR_API_URL = "https://calendar.usc.edu"
     KEYWORD_TAG = "LI-Humanities"
+    DEPARTMENT_URL_NAMES = ["american_studies_and_ethnicity", "casden_institute", "USC_Shoah_Fondatin",
+                            "french_and_italian", "crcc", "cpw", "classics", "creative_writing_literature",
+                            "comparative_literature_colt", "english", "gender_studies", "history",
+                            "institute_on_california_and_the_west_icw","latin_american_and_iberian_cultures",
+                            "german_studies_program", "max_kade_institute", "school_of_religion", "society_of_fellows",
+                            "usc_shinso_ito_center_for_japanese_religions_and_culture", "early_modern_studies_institute_emsi",
+                            "visions_and_voices_the_arts_and_humanities_initiative", "usc_visual_studies_research_institute_vsri",
+                            "thornton_school_of_music", "roski_school_of_art_and_design", "dramatic-arts", "fisher_museum_of_art",
+                            "usc_libraries", "institute_for_catholic_studies", "campus_humanities", "kaufman", "pacific_asia_museum"]
+    
 
     def display(self):
         display(self.button_box)
@@ -52,13 +63,31 @@ class EventDownloader:
 
         self._events = []
         self._images = []
+        
+        self.api = LocalistCalendarAPI(self.CALENDAR_API_URL)
+        
 
     def download_events(self, startdate, enddate):
-        api = LocalistCalendarAPI(self.CALENDAR_API_URL)
-        print("retrieving event data...")
-        events = api.get_filtered_events(self.KEYWORD_TAG, startdate, enddate)
+        print("retrieving events tagged with LI-Humanities...")
+        levan_events = self.api.get_filtered_events(self.KEYWORD_TAG, startdate, enddate)
 
-        self._events = events
+        print("querying department ids from known urls...")
+        all_depts_data = self.api.get_departments()
+        data_urlnames = [_["urlname"] for _ in all_depts_data]
+        deptids = []
+        for urlname_search in self.DEPARTMENT_URL_NAMES:
+            try:
+                idx = data_urlnames.index(urlname_search)
+            except ValueError:
+                warnings.warn("URLname: %s not found in calendar departments" % urlname_search)
+            deptids.append(all_depts_data[idx]["id"])
+            
+        print("retrieving events from humanities calendar for %d departments..." % len(deptids)) 
+        hum_events = self.api.get_events_from_multiple_departments(startdate, enddate, deptids)
+
+        print("compiling list of all events...")
+        self._events = sorted(levan_events + hum_events)
+
         print("got %d events" % len(self._events))
 
 
