@@ -66,7 +66,7 @@ class EventDownloader:
         
     def get_next_friday(self):
         today = datetime.today()
-        next_friday = today + datetime.timedelta( (4 - today.weekday() % 7))
+        next_friday = today + timedelta( (4 - today.weekday() % 7))
         return next_friday
 
 
@@ -83,7 +83,7 @@ class EventDownloader:
                 idx = data_urlnames.index(urlname_search)
             except ValueError:
                 warnings.warn("URLname: %s not found in calendar departments" % urlname_search)
-            deptids.append(all_depts_data[idx][""])
+            deptids.append(all_depts_data[idx]["id"])
             
         print("retrieving events from humanities calendar for %d departments..." % len(deptids)) 
         hum_events = self.api.get_events_from_multiple_departments(startdate, enddate, deptids)
