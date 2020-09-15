@@ -41,15 +41,13 @@ class EventDownloader:
 
     def __init__(self, browser_widget = None):
         self._browser = browser_widget
-        self._startdate = datetime.today()
-        self._enddate = self._startdate + timedelta(days=30)
+        self._startdate = self.get_next_friday()
+        self._enddate = self._startdate + timedelta(days=21)
         self.start_date_selector = ipywidgets.DatePicker(value=self._startdate,
                                                          description="start date")
         self.end_date_selector = ipywidgets.DatePicker(value=self._enddate,
                                                        description="end date")
 
-
-        
         self.download_button = ipywidgets.Button(description="download events")
         
         
@@ -66,6 +64,11 @@ class EventDownloader:
         
         self.api = LocalistCalendarAPI(self.CALENDAR_API_URL)
         
+    def get_next_friday(self):
+        today = datetime.today()
+        next_friday = today + datetime.timedelta( (4 - today.weekday() % 7))
+        return next_friday
+
 
     def download_events(self, startdate, enddate):
         print("retrieving events tagged with LI-Humanities...")
@@ -80,7 +83,7 @@ class EventDownloader:
                 idx = data_urlnames.index(urlname_search)
             except ValueError:
                 warnings.warn("URLname: %s not found in calendar departments" % urlname_search)
-            deptids.append(all_depts_data[idx]["id"])
+            deptids.append(all_depts_data[idx][""])
             
         print("retrieving events from humanities calendar for %d departments..." % len(deptids)) 
         hum_events = self.api.get_events_from_multiple_departments(startdate, enddate, deptids)
