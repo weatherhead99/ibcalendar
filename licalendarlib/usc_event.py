@@ -34,8 +34,44 @@ class EventInstance(Item):
     @property
     def datetime(self):
         return dateutil.parser.parse(self["start"])
+    
+    def __lt__(self, other):
+        return self.datetime < other.datetime
+    def __le__(self, other):
+        return self.datetime <= other.datetime
+    def __gt__(self, other):
+        return self.datetime > other.datetime
+    def __ge__(self,other):
+        return self.datetime >= other.datetime
+    
+
+
+def cmpcheck(func):
+    def f(self, other):
+        if len(self.instances) !=1 or len(other.instances) != 1:
+            raise ValueError("cannot compare events with multiple instances")
+        return func(self, other)
+    return f
+
 
 class Event(Item):
+
+    @cmpcheck
+    def __lt__(self, other):
+        return self.instances[0] < other.instances[0]
+    
+    @cmpcheck
+    def __le__(self, other):
+        return self.instances[0] <= other.instances[0]
+    
+    @cmpcheck
+    def __gt__(self, other):
+        return self.instances[0] > other.instances[0]
+    
+    @cmpcheck
+    def __ge__(self, other):
+        return self.instances[0] >= other.instances[0]
+    
     @property
     def title(self):
         return self["title"]
@@ -84,4 +120,23 @@ class Event(Item):
             return "Virtual"
         else:
             return self["location_name"]
+    
+    @property
+    def department_names(self):
+        try:
+            deps = self["departments"]
+        except KeyError:
+            return []
+        return [_["name"] for _ in deps]
+    
+    @property
+    def department_ids(self):
+        try:
+            deps = self["departments"]
+        except KeyError:
+            return []
+        return [_["id"] for _ in deps]
+    
+    def __repr__(self) -> str:
+        return "Event( '%s')" % self.title
     

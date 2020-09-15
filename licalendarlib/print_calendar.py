@@ -10,7 +10,7 @@ import tqdm
 import pytz
 import datetime
 import os
-from localist_calendar import LocalistCalendarAPI
+from licalendarlib.localist_calendar import LocalistCalendarAPI
 from html_template import html_format_event
 from IPython.core.display import HTML, display
 import tempfile
